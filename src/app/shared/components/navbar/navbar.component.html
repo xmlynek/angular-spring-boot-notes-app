@@ -1,0 +1,23 @@
+<!--<p-menubar [model]="menuItems()">-->
+<!--  <ng-template pTemplate="start">-->
+<!--    <i class="pi pi-pencil mr-2" style="font-size: 1.5rem;"></i>-->
+<!--    <span class="font-bold text-lg">Notes App</span>-->
+<!--  </ng-template>-->
+<!--  <ng-template pTemplate="end">-->
+<!--    <button pButton label="Login" icon="pi pi-sign-in" class="p-button-sm"></button>-->
+<!--  </ng-template>-->
+<!--</p-menubar>-->
+
+<p-menubar [model]="[
+  { label: 'Home', icon: 'pi pi-home', url: 'home' },
+  { label: 'Features', icon: 'pi pi-star', url: 'notes' },
+  { label: 'About', icon: 'pi pi-envelope', url: 'about' }
+]" class="navbar-menu">
+  <ng-template pTemplate="start">
+    <div class="logo">NotesApp</div>
+  </ng-template>
+  <ng-template pTemplate="end">
+    <button pButton label="Login" class="p-button-raised p-button-primary"></button>
+  </ng-template>
+</p-menubar>
+

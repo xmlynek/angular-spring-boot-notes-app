@@ -1,0 +1,32 @@
+<div class="landing-page-container">
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1>Your Notes, Simplified</h1>
+      <p>Organize your thoughts, ideas, and tasks effortlessly with our beautiful and intuitive notes app.</p>
+      <div class="actions">
+        <button pButton type="button" label="Get Started" class="p-button-raised p-button-primary"></button>
+        <button [routerLink]="['/about']" pButton type="button" label="Learn More" class="p-button-text"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="features-section">
+    <p-card header="Effortless Organization" >
+      <ng-template pTemplate="content">
+        <p>Quickly categorize, search, and find your notes. Stay productive!</p>
+      </ng-template>
+    </p-card>
+
+    <p-card header="Cross-Platform Sync" >
+      <ng-template pTemplate="content">
+        <p>Access your notes anywhere, anytime, on any device.</p>
+      </ng-template>
+    </p-card>
+
+    <p-card header="Secure & Private" >
+      <ng-template pTemplate="content">
+        <p>Your data is encrypted and protected with industry-leading security.</p>
+      </ng-template>
+    </p-card>
+  </div>
+</div>

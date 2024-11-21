@@ -1,0 +1,4 @@
+<p>note-list works!</p>
+@for (note of notes(); track note.id) {
+  <app-note [note]="note" />
+}
