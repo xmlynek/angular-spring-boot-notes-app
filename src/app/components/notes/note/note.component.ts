@@ -3,13 +3,12 @@ import {Note} from "./note.model";
 import {DatePipe} from "@angular/common";
 
 @Component({
-  selector: 'app-note',
-  standalone: true,
-  imports: [
-    DatePipe
-  ],
-  templateUrl: './note.component.html',
-  styleUrl: './note.component.scss'
+    selector: 'app-note',
+    imports: [
+        DatePipe
+    ],
+    templateUrl: './note.component.html',
+    styleUrl: './note.component.scss'
 })
 export class NoteComponent {
 

@@ -5,17 +5,16 @@ import {CardModule} from "primeng/card";
 import {RouterLink} from "@angular/router";
 
 @Component({
-  selector: 'app-homepage',
-  standalone: true,
-  imports: [
-    ButtonDirective,
-    DividerModule,
-    Button,
-    CardModule,
-    RouterLink
-  ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+    selector: 'app-homepage',
+    imports: [
+        ButtonDirective,
+        DividerModule,
+        Button,
+        CardModule,
+        RouterLink
+    ],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent {
 

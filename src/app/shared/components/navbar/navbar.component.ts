@@ -4,14 +4,13 @@ import {ButtonDirective} from "primeng/button";
 import {MenuItem, PrimeNGConfig} from "primeng/api";
 
 @Component({
-  selector: 'app-navbar',
-  standalone: true,
-  imports: [
-    MenubarModule,
-    ButtonDirective
-  ],
-  templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+    selector: 'app-navbar',
+    imports: [
+        MenubarModule,
+        ButtonDirective
+    ],
+    templateUrl: './navbar.component.html',
+    styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent implements OnInit {
   isMenuOpen = signal(false);
