@@ -1,4 +1,7 @@
 <div>
   <p>ID: {{note().id}}</p>
   <p>Name: {{note().name}}</p>
+  <p>Description: {{note().content}}</p>
+  <p>Created at: {{note().createdAt | date: 'yyyy-MM-dd' }}</p>
+  <p>json: {{JSON.stringify(note())}}</p>
 </div>

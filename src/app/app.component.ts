@@ -14,14 +14,4 @@ import {NavbarComponent} from "./shared/components/navbar/navbar.component";
 export class AppComponent {
   title = 'notes-app';
 
-  notes: Signal<Array<Note>> = signal([
-    {
-      id: '1',
-      name: 'Note 1'
-    },
-    {
-      id: '2',
-      name: 'Note 2'
-    },
-  ]);
 }

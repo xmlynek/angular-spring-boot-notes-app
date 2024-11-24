@@ -1,4 +1,4 @@
-import {Component, input} from '@angular/core';
+import {Component, input, signal, Signal} from '@angular/core';
 import {NoteComponent} from "../note/note.component";
 import {Note} from "../note/note.model";
 
@@ -13,6 +13,29 @@ import {Note} from "../note/note.model";
 })
 export class NoteListComponent {
 
-  notes = input.required<Array<Note>>();
+  notes: Signal<Array<Note>> = signal([
+    {
+      id: '1',
+      name: 'Note 1',
+      content: 'This is a sample note.',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      authorId: '123',
+      tags: ['sample', 'tag'],
+      isPinned: false,
+      isArchived: false,
+    },
+    {
+      id: '2',
+      name: 'Note 2',
+      content: 'Another sample note.',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      authorId: '123',
+      tags: ['sample', 'tag'],
+      isPinned: false,
+      isArchived: false,
+    },
+  ]);
 
 }
