@@ -1,0 +1,11 @@
+.note-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem; /* Larger spacing for better separation */
+  padding: 2rem;
+  max-width: 1000px; /* Constrain the width for balance */
+  margin: 0 auto; /* Center the list */
+  background: linear-gradient(135deg, #eef2f3, #ffffff); /* Subtle gradient for a modern look */
+  border-radius: 16px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Deeper shadow for prominence */
+}

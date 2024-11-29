@@ -9,7 +9,6 @@ import {RouterLink} from "@angular/router";
     imports: [
         ButtonDirective,
         DividerModule,
-        Button,
         CardModule,
         RouterLink
     ],

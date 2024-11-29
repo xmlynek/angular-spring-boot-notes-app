@@ -1,0 +1,17 @@
+.notes-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+
+    .p-button {
+      font-size: 1rem;
+      padding: 0.8rem 1.2rem;
+    }
+  }
+}

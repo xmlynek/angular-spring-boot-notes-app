@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import {HomeComponent} from "./pages/home/home.component";
 import {AboutComponent} from "./pages/about/about.component";
 import {NoteListComponent} from "./components/notes/note-list/note-list.component";
+import {NotesComponent} from "./pages/notes/notes.component";
 
 export const routes: Routes = [
   {
@@ -19,7 +20,7 @@ export const routes: Routes = [
   },
   {
     path: 'notes',
-    component: NoteListComponent
+    component: NotesComponent
   },
   {
     path: '**',

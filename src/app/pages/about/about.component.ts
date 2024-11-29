@@ -7,8 +7,7 @@ import {NgOptimizedImage} from "@angular/common";
     selector: 'app-about',
     imports: [
         CardModule,
-        ButtonDirective,
-        NgOptimizedImage
+        ButtonDirective
     ],
     templateUrl: './about.component.html',
     styleUrl: './about.component.scss'
