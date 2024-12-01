@@ -2,13 +2,15 @@ import { Component } from '@angular/core';
 import {CardModule} from "primeng/card";
 import {ButtonDirective} from "primeng/button";
 import {NgOptimizedImage} from "@angular/common";
+import {ProgressSpinnerModule} from "primeng/progressspinner";
 
 @Component({
     selector: 'app-about',
-    imports: [
-        CardModule,
-        ButtonDirective
-    ],
+  imports: [
+    CardModule,
+    ButtonDirective,
+    ProgressSpinnerModule
+  ],
     templateUrl: './about.component.html',
     styleUrl: './about.component.scss'
 })

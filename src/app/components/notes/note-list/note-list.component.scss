@@ -8,4 +8,24 @@
   background: linear-gradient(135deg, #eef2f3, #ffffff); /* Subtle gradient for a modern look */
   border-radius: 16px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Deeper shadow for prominence */
+
+}
+
+.note-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+  background: #fff; /* Card background */
+  border-radius: 12px; /* Rounded corners for modern look */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  overflow: hidden; /* Prevent content overflow for consistent design */
+  cursor: pointer; /* Indicate interactivity */
+}
+
+.note-card:hover {
+  transform: translateY(-5px) scale(1.02); /* Lift and slightly scale up on hover */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow for hover effect */
+}
+
+.note-card:active {
+  transform: translateY(0); /* Return to normal position on click */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow on click */
 }

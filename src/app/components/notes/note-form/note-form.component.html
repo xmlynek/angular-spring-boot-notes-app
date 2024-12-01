@@ -1,35 +1,49 @@
-<form [formGroup]="noteForm" class="note-form">
+<form [formGroup]="noteForm" class="note-form" (ngSubmit)="handleSubmit()">
   <!-- Name Field -->
   <div class="form-group">
     <label for="name">Name</label>
-    <input pInputText id="name" formControlName="name" placeholder="Enter note name" />
-<!--    <p-message *if="noteForm.get('name')?.errors" severity="error" text="Name is required and must not exceed 32 characters"></p-message>-->
+    <input pInputText id="name" formControlName="name" placeholder="Enter note name"/>
+    @if (isFormControlInvalid(noteForm.controls.name)) {
+      <p-message severity="error"
+                 text="Name is required and must not exceed {{NAME_MAX_LENGTH}} characters"></p-message>
+    }
   </div>
 
   <!-- Content Field -->
   <div class="form-group">
     <label for="content">Content</label>
-    <textarea pInputTextarea id="content" formControlName="content" rows="5" placeholder="Enter note content"></textarea>
-<!--    <p-message *if="noteForm.get('content')?.errors" severity="error" text="Content is required and must not exceed 1024 characters"></p-message>-->
+    <textarea pInputTextarea id="content" formControlName="content" rows="5"
+              placeholder="Enter note content"></textarea>
+    @if (isFormControlInvalid(noteForm.controls.content)) {
+      <p-message severity="error"
+                 text="Content is required and must not exceed {{CONTENT_MAX_LENGTH}} characters"></p-message>
+    }
   </div>
 
   <!-- Tags Field -->
   <div class="form-group" formArrayName="tags">
     <label>Tags</label>
     <div class="tags">
-      @for (tag of tags.controls; let i=$index; track tag) {
+      @for (tag of tags.controls; let i = $index; track tag) {
         <div class="tag-item">
-          <input pInputText [formControlName]="i" placeholder="Enter tag" />
-          <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger" type="button" (click)="removeTag(i)"></button>
+          <input pInputText [formControlName]="i" placeholder="Enter tag"/>
+          <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger" type="button"
+                  (click)="removeTag(i)"></button>
         </div>
+        @if (isFormControlInvalid(tag)) {
+          <p-message severity="error"
+                     text="Tag is required and must not exceed {{TAG_MAX_LENGTH}} characters"></p-message>
+        }
       }
     </div>
-    <button pButton label="Add Tag" icon="pi pi-plus" type="button" class="p-button-outlined" (click)="addTag()"></button>
+    <button pButton label="Add Tag" icon="pi pi-plus" type="button" class="p-button-outlined"
+            (click)="addTag()"></button>
   </div>
 
   <!-- Submit Button -->
-<!--  <div class="form-actions">-->
-<!--    <button pButton type="submit" label="Save" icon="pi pi-check" class="p-button-primary" [disabled]="noteForm.invalid"></button>-->
-<!--    <button pButton type="button" label="Cancel" icon="pi pi-times" class="p-button-secondary"></button>-->
-<!--  </div>-->
+  <div class="form-actions">
+    <button pButton type="submit" label="Save" icon="pi pi-check" class="p-button-primary"
+            [disabled]="noteForm.invalid"></button>
+    <!--    <button pButton type="button" label="Cancel" icon="pi pi-times" class="p-button-secondary"></button>-->
+  </div>
 </form>

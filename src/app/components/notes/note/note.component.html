@@ -2,7 +2,7 @@
   <ng-template pTemplate="header">
     <div class="note-header">
       <h3>{{ note().name }}</h3>
-      <span class="note-date">{{ note().updatedAt | date: 'medium' }}</span>
+      <span class="note-date">{{ note().createdAt | date: 'medium' }}</span>
     </div>
   </ng-template>
 
@@ -18,20 +18,25 @@
         }
       </div>
       <div class="note-actions">
-        @if (note().isPinned) {
-          <button
-            pButton
-            icon="pi pi-thumb-tack"
-            class="p-button-rounded p-button-warning"
-          ></button>
-        }
-        @if (note().isArchived) {
-          <button
-            pButton
-            icon="pi pi-archive"
-            class="p-button-rounded p-button-secondary"
-          ></button>
-        }
+        <button
+          pButton
+          icon="pi pi-thumbtack"
+          class="p-button-rounded"
+          [class.p-button-warning]="note().isPinned"
+          [class.p-button-secondary]="!note().isPinned"
+          (click)="togglePinned($event)"
+        ></button>
+        <button
+          pButton
+          icon="pi pi-cog"
+          class="p-button-rounded p-button-info"
+          (click)="handleEdit($event)"
+        ></button>
+        <button
+          pButton
+          icon="pi pi-trash"
+          class="p-button-rounded p-button-danger"
+        ></button>
       </div>
     </div>
   </ng-template>

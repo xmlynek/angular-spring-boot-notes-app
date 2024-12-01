@@ -1,0 +1,8 @@
+@if (noteById()) {
+  <div class="note-details">
+  <app-note-details [note]="noteById()!" />
+  </div>
+} @else {
+  <p class="fallback-text">Note not found.</p>
+}
+

@@ -1,9 +1,12 @@
-import {Component, input} from '@angular/core';
-import {Note} from "./note.model";
-import {DatePipe} from "@angular/common";
+import {Component, inject, input, model} from '@angular/core';
+import {Note} from "../notes.model";
+import {DatePipe, NgClass} from "@angular/common";
 import {CardModule} from "primeng/card";
 import {TagModule} from "primeng/tag";
 import {ButtonDirective} from "primeng/button";
+import {PrimeIcons} from "primeng/api";
+import {NotesService} from "../notes.service";
+import {ToolbarComponent} from "../../../shared/toolbar/toolbar.component";
 
 @Component({
   selector: 'app-note',
@@ -18,7 +21,16 @@ import {ButtonDirective} from "primeng/button";
 })
 export class NoteComponent {
 
-  note = input.required<Note>();
+  private notesService = inject(NotesService);
+  note = model.required<Note>();
 
-  protected readonly JSON = JSON;
+  togglePinned = (event: MouseEvent) => {
+    event.stopPropagation();
+    this.notesService.updateNote({...this.note(), isPinned: !this.note().isPinned});
+  }
+
+  handleEdit(event: MouseEvent) {
+    event.stopPropagation();
+
+  }
 }

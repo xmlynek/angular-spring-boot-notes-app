@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import {HomeComponent} from "./pages/home/home.component";
 import {AboutComponent} from "./pages/about/about.component";
-import {NoteListComponent} from "./components/notes/note-list/note-list.component";
 import {NotesComponent} from "./pages/notes/notes.component";
+import {NotePageComponent} from "./pages/note/note.component";
 
 export const routes: Routes = [
   {
@@ -20,7 +20,10 @@ export const routes: Routes = [
   },
   {
     path: 'notes',
-    component: NotesComponent
+    children: [
+      { path: '', component: NotesComponent },
+      { path: ':noteId', component: NotePageComponent },
+    ],
   },
   {
     path: '**',

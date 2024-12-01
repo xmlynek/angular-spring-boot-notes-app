@@ -4,11 +4,11 @@
             (click)="createNewNote()"></button>
   </div>
 
-  <app-note-list [notes]="notes()"></app-note-list>
+  <app-note-list></app-note-list>
 
-  <app-modal [(visible)]="showDialog()" (onClose)="showDialog.set(false)"
+  <app-modal [(visible)]="showDialog"
              (onConfirm)="showDialog.set(false)">
-    <app-note-form/>
+    <app-note-form (formSubmit)="saveNote($event)"/>
   </app-modal>
 
 </div>

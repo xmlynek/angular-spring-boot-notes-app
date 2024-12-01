@@ -1,6 +1,12 @@
 <div class="note-list">
-  @for (note of notes(); track note.id) {
-    <app-note [note]="note" />
+  @if (sortedNotes() && sortedNotes().length > 0) {
+    @for (note of sortedNotes(); track note.id) {
+        <app-note [note]="note" class="note-card" [routerLink]="[note.id]"/>
+    }
+  } @else {
+    <div>
+      <p>Your note list is empty</p>
+    </div>
   }
 </div>
 
