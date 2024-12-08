@@ -1,5 +1,6 @@
 import {Injectable, signal, WritableSignal} from "@angular/core";
 import {Note} from "./notes.model";
+import {NoteFormModel} from "./note-form/note-form.model";
 
 @Injectable({providedIn: 'root'})
 export class NotesService {
@@ -13,7 +14,6 @@ export class NotesService {
       authorId: '123',
       tags: ['sample', 'tag'],
       isPinned: true,
-      isArchived: false,
     },
     {
       id: '2',
@@ -24,7 +24,6 @@ export class NotesService {
       authorId: '123',
       tags: ['sample', 'tag'],
       isPinned: false,
-      isArchived: true,
     },
   ]);
 
@@ -36,12 +35,19 @@ export class NotesService {
     this.notesArr.update((prevNotes) => [...prevNotes, note]);
   }
 
-  updateNote(note: Note) {
-    this.notesArr.update((prevNotes) => prevNotes.map(n => n.id === note.id? note : n));
+  toggleNotePinned(id: string, isPinned: boolean) {
+    this.notesArr.update((prevNotes) => prevNotes.map(n => n.id === id? {...n, isPinned} : n));
+  }
+
+  updateNote(id: string, updateData: NoteFormModel) {
+    this.notesArr.update((prevNotes) => prevNotes.map(n => n.id === id ? {
+      ...n, ...updateData,
+      updatedAt: new Date()
+    } : n));
   }
 
   deleteNote(noteId: string) {
-    this.notesArr.update((prevNotes) => prevNotes.filter(n => n.id!== noteId));
+    this.notesArr.update((prevNotes) => prevNotes.filter(n => n.id !== noteId));
   }
 
   getNoteById(noteId: string) {

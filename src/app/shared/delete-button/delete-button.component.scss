@@ -1,0 +1,13 @@
+.p-button-danger {
+  background-color: #e63131;
+  color: white;
+
+  &:hover {
+    background-color: #d32f2f;
+  }
+}
+
+.p-button-rounded {
+  padding: 0.6rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

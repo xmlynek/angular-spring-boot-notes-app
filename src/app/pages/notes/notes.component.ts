@@ -43,7 +43,6 @@ export class NotesComponent {
       updatedAt: new Date(),
       authorId: "xd",
       isPinned: false,
-      isArchived: false,
       id: Math.random().toString(36)
     })
     this.showDialog.set(false);

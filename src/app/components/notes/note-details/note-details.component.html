@@ -1,1 +1,45 @@
-<p>note-details works!</p>
+<p-card class="note-details-card">
+  <ng-template pTemplate="header">
+    <div class="header">
+      <h2>{{ note().name }}</h2>
+      <div class="actions">
+        <button
+          pButton
+          icon="pi pi-pencil"
+          class="p-button-rounded p-button-text p-button-info"
+          title="Edit Note"
+          (click)="isEditNoteModalShow.set(true)"
+        ></button>
+        <app-delete-button (onConfirm)="handleNoteDelete()" />
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="content">
+    <p class="content-label">Content:</p>
+    <p class="content-body">{{ note().content }}</p>
+  </div>
+
+  <div class="tags">
+    <p class="tags-label">Tags:</p>
+    <div class="tags-list">
+      @for (tag of note().tags; track tag) {
+        <p-tag [value]="tag" styleClass="tag"></p-tag>
+      }
+    </div>
+  </div>
+
+  <div class="meta">
+    <p class="meta-item">
+      <strong>Created At:</strong> {{ note().createdAt | date: 'medium' }}
+    </p>
+    <p class="meta-item">
+      <strong>Last Updated:</strong> {{ note().updatedAt | date: 'medium' }}
+    </p>
+  </div>
+</p-card>
+
+<app-modal [(visible)]="isEditNoteModalShow">
+  <app-note-form [initialData]="note()" (formSubmit)="handleNoteUpdate($event)"/>
+</app-modal>
+

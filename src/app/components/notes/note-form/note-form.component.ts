@@ -59,7 +59,9 @@ export class NoteFormComponent implements OnInit {
       const values = this.noteForm.value;
       const tags = values.tags ? values.tags.map(value => value as string) : [];
       this.formSubmit.emit({name: values.name!, content: values.content!, tags: tags});
-      this.noteForm.reset();
+      if (!this.initialData()) {
+        this.noteForm.reset();
+      }
     }
   }
 

@@ -7,6 +7,7 @@ import {ButtonDirective} from "primeng/button";
 import {PrimeIcons} from "primeng/api";
 import {NotesService} from "../notes.service";
 import {ToolbarComponent} from "../../../shared/toolbar/toolbar.component";
+import {DeleteButtonComponent} from "../../../shared/delete-button/delete-button.component";
 
 @Component({
   selector: 'app-note',
@@ -15,6 +16,7 @@ import {ToolbarComponent} from "../../../shared/toolbar/toolbar.component";
     CardModule,
     TagModule,
     ButtonDirective,
+    DeleteButtonComponent,
   ],
   templateUrl: './note.component.html',
   styleUrl: './note.component.scss'
@@ -26,11 +28,15 @@ export class NoteComponent {
 
   togglePinned = (event: MouseEvent) => {
     event.stopPropagation();
-    this.notesService.updateNote({...this.note(), isPinned: !this.note().isPinned});
+    this.notesService.toggleNotePinned(this.note().id, !this.note().isPinned);
   }
 
   handleEdit(event: MouseEvent) {
     event.stopPropagation();
 
+  }
+
+  handleDelete() {
+    this.notesService.deleteNote(this.note().id);
   }
 }

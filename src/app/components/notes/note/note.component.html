@@ -22,6 +22,7 @@
           pButton
           icon="pi pi-thumbtack"
           class="p-button-rounded"
+          title="Pin Note"
           [class.p-button-warning]="note().isPinned"
           [class.p-button-secondary]="!note().isPinned"
           (click)="togglePinned($event)"
@@ -30,13 +31,10 @@
           pButton
           icon="pi pi-cog"
           class="p-button-rounded p-button-info"
+          title="Edit Note"
           (click)="handleEdit($event)"
         ></button>
-        <button
-          pButton
-          icon="pi pi-trash"
-          class="p-button-rounded p-button-danger"
-        ></button>
+        <app-delete-button (click)="$event.stopImmediatePropagation()" (onConfirm)="handleDelete()" />
       </div>
     </div>
   </ng-template>

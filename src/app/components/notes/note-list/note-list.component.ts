@@ -5,14 +5,16 @@ import {RouterLink} from "@angular/router";
 import {CardModule} from "primeng/card";
 import {NotesService} from "../notes.service";
 import {ToolbarComponent} from "../../../shared/toolbar/toolbar.component";
+import {ConfirmDialogModule} from "primeng/confirmdialog";
+import {ConfirmationService, ConfirmEventType} from "primeng/api";
 
 @Component({
   selector: 'app-note-list',
   imports: [
-    NoteComponent, RouterLink, CardModule
+    NoteComponent, RouterLink, CardModule, ConfirmDialogModule
   ],
   templateUrl: './note-list.component.html',
-  styleUrl: './note-list.component.scss'
+  styleUrl: './note-list.component.scss',
 })
 export class NoteListComponent {
 

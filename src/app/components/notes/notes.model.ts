@@ -7,5 +7,4 @@ export interface Note {
   authorId: string;
   tags: Array<string>;
   isPinned: boolean;
-  isArchived: boolean;
 }
