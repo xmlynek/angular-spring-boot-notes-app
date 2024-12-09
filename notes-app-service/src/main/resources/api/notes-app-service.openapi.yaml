@@ -1,0 +1,162 @@
+openapi: "3.0.0"
+info:
+  title: Notes API
+  description: API for managing notes
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+    description: Main API endpoint
+tags:
+  - name: Notes
+paths:
+  /notes:
+    get:
+      tags:
+        - Notes
+      summary: Get all notes
+      operationId: getNotes
+      responses:
+        '200':
+          description: List of all notes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Note'
+    post:
+      tags:
+        - Notes
+      summary: Create a new note
+      operationId: createNote
+      requestBody:
+        description: Note object to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteRequest'
+      responses:
+        '201':
+          description: Note created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+  /notes/{noteId}:
+    get:
+      tags:
+        - Notes
+      summary: Get a note by ID
+      operationId: getNoteById
+      parameters:
+        - name: noteId
+          in: path
+          required: true
+          description: ID of the note
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Note details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '404':
+          description: Note not found
+    put:
+      tags:
+        - Notes
+      summary: Update a note
+      operationId: updateNote
+      parameters:
+        - name: noteId
+          in: path
+          required: true
+          description: ID of the note
+          schema:
+            type: string
+      requestBody:
+        description: Note object with updated details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteRequest'
+      responses:
+        '200':
+          description: Note updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+    delete:
+      tags:
+        - Notes
+      summary: Delete a note
+      operationId: deleteNote
+      parameters:
+        - name: noteId
+          in: path
+          required: true
+          description: ID of the note
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Note deleted successfully
+components:
+  schemas:
+    NoteRequest:
+      type: object
+      required:
+        - name
+        - content
+      properties:
+        name:
+          type: string
+          description: Name of the note
+        content:
+          type: string
+          description: Content of the note
+        tags:
+          type: array
+          items:
+            type: string
+          description: List of tags associated with the note
+        isPinned:
+          type: boolean
+          description: Whether the note is pinned
+    Note:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the note
+        name:
+          type: string
+          description: Name of the note
+        content:
+          type: string
+          description: Content of the note
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation date of the note
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update date of the note
+        authorId:
+          type: string
+          format: uuid
+          description: UUID of the author
+        tags:
+          type: array
+          items:
+            type: string
+          description: List of tags associated with the note
+        isPinned:
+          type: boolean
+          description: Whether the note is pinned
