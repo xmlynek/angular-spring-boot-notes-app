@@ -1,9 +1,10 @@
-import {Component, computed, inject} from '@angular/core';
+import {Component, computed, inject, input} from '@angular/core';
 import {NoteComponent} from "../note/note.component";
 import {RouterLink} from "@angular/router";
 import {CardModule} from "primeng/card";
 import {NotesService} from "../notes.service";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
+import {Note} from "../../../core/modules/openapi";
 
 @Component({
   selector: 'app-note-list',
@@ -15,14 +16,13 @@ import {ConfirmDialogModule} from "primeng/confirmdialog";
 })
 export class NoteListComponent {
 
-  private notesService = inject(NotesService);
+  notes = input.required<Note[]>();
 
-  notes = this.notesService.notes;
   sortedNotes = computed(() => this.notes().sort((a, b) => {
     const pinnedComparison = Number(b.isPinned) - Number(a.isPinned);
 
     if (pinnedComparison === 0) {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      return new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime();
     }
 
     return pinnedComparison;

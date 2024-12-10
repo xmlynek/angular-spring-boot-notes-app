@@ -1,5 +1,4 @@
-import {Component, inject, signal} from '@angular/core';
-import {Note} from "../../components/notes/notes.model";
+import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {NoteListComponent} from "../../components/notes/note-list/note-list.component";
 import {ButtonDirective} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
@@ -8,7 +7,9 @@ import {FormsModule} from "@angular/forms";
 import {NoteFormComponent} from "../../components/notes/note-form/note-form.component";
 import {ModalComponent} from "../../shared/modal/modal.component";
 import {NoteFormModel} from "../../components/notes/note-form/note-form.model";
-import {NotesService} from "../../components/notes/notes.service";
+import {ApiModule, NotesService, Note} from "../../core/modules/openapi";
+import {rxResource} from "@angular/core/rxjs-interop";
+import {switchMap, tap} from "rxjs";
 
 @Component({
   selector: 'app-notes',
@@ -19,32 +20,45 @@ import {NotesService} from "../../components/notes/notes.service";
     ButtonDirective,
     FormsModule,
     InputTextModule,
-    InputTextareaModule],
+    InputTextareaModule,
+    ApiModule],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.scss'
 })
 export class NotesComponent {
 
-  private notesService = inject(NotesService);
-  selectedNote = signal<Note | null>(null); // For modifying notes
   showDialog = signal<boolean>(false); // For showing the create/edit dialog
+  private destroyRef = inject(DestroyRef);
 
+  private notesService = inject(NotesService);
+  notes = signal<Note[]>([]);
+
+  notesRsc = rxResource({
+    loader: () => this.notesService.getNotes(),
+  })
+
+  constructor() {
+    const sub = this.notesService.getNotes().subscribe((notes) => this.notes.set(notes));
+    this.destroyRef.onDestroy(() => sub.unsubscribe());
+  }
 
   createNewNote() {
-    this.selectedNote.set(null); // Clear selection
     this.showDialog.set(true); // Show dialog
   }
 
   saveNote(noteRequest: NoteFormModel) {
-    this.notesService.addNote({
+    const sub = this.notesService.createNote({
       ...noteRequest,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      authorId: "xd",
       isPinned: false,
-      id: Math.random().toString(36)
-    })
-    this.showDialog.set(false);
+    }).pipe(
+      tap(() => this.showDialog.set(false)),
+      switchMap(() => this.notesService.getNotes()))
+    .subscribe({
+      next: (notes) => this.notes.set(notes),
+      error: (error) => console.error('Error creating note:', error)
+    });
+
+    this.destroyRef.onDestroy(() => sub.unsubscribe());
   }
 
 

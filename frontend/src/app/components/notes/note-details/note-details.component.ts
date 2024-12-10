@@ -1,5 +1,4 @@
 import {Component, inject, input, signal} from '@angular/core';
-import {Note} from "../notes.model";
 import {TagModule} from "primeng/tag";
 import {DatePipe} from "@angular/common";
 import {CardModule} from "primeng/card";
@@ -11,6 +10,7 @@ import {NotesService} from "../notes.service";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {Router} from "@angular/router";
 import {DeleteButtonComponent} from "../../../shared/delete-button/delete-button.component";
+import {Note} from "../../../core/modules/openapi";
 
 @Component({
   selector: 'app-note-details',
@@ -36,12 +36,12 @@ export class NoteDetailsComponent {
   isEditNoteModalShow = signal<boolean>(false);
 
   handleNoteUpdate(updateNoteData: NoteFormModel) {
-    this.notesService.updateNote(this.note().id, updateNoteData);
+    this.notesService.updateNote(this.note().id!, updateNoteData);
     this.isEditNoteModalShow.set(false);
   }
 
   handleNoteDelete() {
-    this.notesService.deleteNote(this.note().id);
+    this.notesService.deleteNote(this.note().id!);
     this.router.navigate(['/notes'], {replaceUrl: true});
   }
 }

@@ -1,11 +1,10 @@
-import {Component, inject, model} from '@angular/core';
-import {Note} from "../notes.model";
+import {Component, DestroyRef, inject, model} from '@angular/core';
 import {DatePipe} from "@angular/common";
 import {CardModule} from "primeng/card";
 import {TagModule} from "primeng/tag";
 import {ButtonDirective} from "primeng/button";
-import {NotesService} from "../notes.service";
 import {DeleteButtonComponent} from "../../../shared/delete-button/delete-button.component";
+import {Note, NotesService} from "../../../core/modules/openapi";
 
 @Component({
   selector: 'app-note',
@@ -22,11 +21,18 @@ import {DeleteButtonComponent} from "../../../shared/delete-button/delete-button
 export class NoteComponent {
 
   private notesService = inject(NotesService);
+  private destroyRef = inject(DestroyRef);
   note = model.required<Note>();
 
   togglePinned = (event: MouseEvent) => {
     event.stopPropagation();
-    this.notesService.toggleNotePinned(this.note().id, !this.note().isPinned);
+    const sub = this.notesService.updateNote(this.note().id!, {
+      ...this.note(),
+      isPinned: !this.note().isPinned
+    }).subscribe({
+      next: (updatedNote) => this.note.set(updatedNote)
+    });
+    this.destroyRef.onDestroy(() => sub.unsubscribe());
   }
 
   handleEdit(event: MouseEvent) {
@@ -35,6 +41,7 @@ export class NoteComponent {
   }
 
   handleDelete() {
-    this.notesService.deleteNote(this.note().id);
+    const sub = this.notesService.deleteNote(this.note().id!).subscribe();
+    this.destroyRef.onDestroy(() => sub.unsubscribe());
   }
 }

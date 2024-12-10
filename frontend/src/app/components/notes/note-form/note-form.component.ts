@@ -5,11 +5,11 @@ import {
   Validators
 } from "@angular/forms";
 import {ButtonDirective} from "primeng/button";
-import {Note} from "../notes.model";
 import {MessageModule} from "primeng/message";
 import {InputTextModule} from "primeng/inputtext";
 import {InputTextareaModule} from "primeng/inputtextarea";
 import {NoteFormModel} from "./note-form.model";
+import {Note} from "../../../core/modules/openapi";
 
 @Component({
   selector: 'app-note-form',
@@ -37,7 +37,7 @@ export class NoteFormComponent implements OnInit {
       const {name, content, tags} = this.initialData()!;
       this.noteForm.patchValue({name, content})
       this.tags.clear();
-      tags.forEach((tag) => this.addTag(tag));
+      tags?.forEach((tag) => this.addTag(tag));
     }
   }
 

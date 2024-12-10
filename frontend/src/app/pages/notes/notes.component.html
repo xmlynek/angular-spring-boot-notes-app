@@ -4,7 +4,7 @@
             (click)="createNewNote()"></button>
   </div>
 
-  <app-note-list></app-note-list>
+  <app-note-list [notes]="notes()!"></app-note-list>
 
   <app-modal [(visible)]="showDialog"
              (onConfirm)="showDialog.set(false)">
