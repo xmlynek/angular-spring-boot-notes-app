@@ -1,7 +1,7 @@
 <div class="note-list">
   @if (sortedNotes() && sortedNotes().length > 0) {
     @for (note of sortedNotes(); track note.id) {
-        <app-note [note]="note" class="note-card" [routerLink]="[note.id]"/>
+        <app-note-card [note]="note" class="note-card" [routerLink]="[note.id]" (edit)="onEditNote($event)"/>
     }
   } @else {
     <div>

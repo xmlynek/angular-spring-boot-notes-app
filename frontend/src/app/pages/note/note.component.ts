@@ -1,7 +1,7 @@
-import {Component, computed, inject, input, resource} from '@angular/core';
+import {Component, computed, inject, input} from '@angular/core';
 import {NoteDetailsComponent} from "../../components/notes/note-details/note-details.component";
-import {NotesService} from "../../core/modules/openapi";
 import {rxResource} from "@angular/core/rxjs-interop";
+import {NotesService} from "../../core/modules/openapi";
 
 @Component({
   selector: 'app-note-page',
@@ -16,11 +16,15 @@ export class NotePageComponent {
   noteId = input.required<string>();
   private notesService = inject(NotesService);
 
-  note = rxResource({
-    request: this.noteId,
-    loader: () => this.notesService.getNoteById(this.noteId())
+  noteResourceRef = rxResource({
+    request: () => this.noteId(),
+    loader: ({request}) => this.notesService.getNoteById(request)
   })
 
-  noteById = computed(() => this.note.value())
+  noteById = computed(() => this.noteResourceRef.value())
+
+  handleUpdate() {
+    this.noteResourceRef.reload();
+  }
 
 }

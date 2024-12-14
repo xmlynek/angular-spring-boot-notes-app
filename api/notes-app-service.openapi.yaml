@@ -130,6 +130,15 @@ components:
           description: Whether the note is pinned
     Note:
       type: object
+      required:
+        - id
+        - name
+        - content
+        - createdAt
+        - updatedAt
+        - authorId
+        - tags
+        - isPinned
       properties:
         id:
           type: string

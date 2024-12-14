@@ -1,4 +1,4 @@
-import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {NoteListComponent} from "../../components/notes/note-list/note-list.component";
 import {ButtonDirective} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
@@ -7,9 +7,9 @@ import {FormsModule} from "@angular/forms";
 import {NoteFormComponent} from "../../components/notes/note-form/note-form.component";
 import {ModalComponent} from "../../shared/modal/modal.component";
 import {NoteFormModel} from "../../components/notes/note-form/note-form.model";
-import {ApiModule, NotesService, Note} from "../../core/modules/openapi";
-import {rxResource} from "@angular/core/rxjs-interop";
-import {switchMap, tap} from "rxjs";
+import {ApiModule, Note} from "../../core/modules/openapi";
+import {NoteStore} from "../../components/notes/note.store";
+import {ProgressSpinnerModule} from "primeng/progressspinner";
 
 @Component({
   selector: 'app-notes',
@@ -21,45 +21,42 @@ import {switchMap, tap} from "rxjs";
     FormsModule,
     InputTextModule,
     InputTextareaModule,
-    ApiModule],
+    ApiModule,
+    ProgressSpinnerModule,
+  ],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.scss'
 })
 export class NotesComponent {
 
-  showDialog = signal<boolean>(false); // For showing the create/edit dialog
-  private destroyRef = inject(DestroyRef);
-
-  private notesService = inject(NotesService);
-  notes = signal<Note[]>([]);
-
-  notesRsc = rxResource({
-    loader: () => this.notesService.getNotes(),
-  })
+  showDialog = signal<boolean>(false);
+  selectedNoteToEdit = signal<Note | null>(null);
 
   constructor() {
-    const sub = this.notesService.getNotes().subscribe((notes) => this.notes.set(notes));
-    this.destroyRef.onDestroy(() => sub.unsubscribe());
+    this.noteStore.reloadNotes();
   }
 
+  protected noteStore = inject(NoteStore);
+  notes = this.noteStore.notes;
+
   createNewNote() {
-    this.showDialog.set(true); // Show dialog
+    this.selectedNoteToEdit.set(null);
+    this.showDialog.set(true);
+  }
+
+  openEditDialog(note: Note) {
+    this.selectedNoteToEdit.set(note);
+    this.showDialog.set(true);
   }
 
   saveNote(noteRequest: NoteFormModel) {
-    const sub = this.notesService.createNote({
-      ...noteRequest,
-      isPinned: false,
-    }).pipe(
-      tap(() => this.showDialog.set(false)),
-      switchMap(() => this.notesService.getNotes()))
-    .subscribe({
-      next: (notes) => this.notes.set(notes),
-      error: (error) => console.error('Error creating note:', error)
-    });
-
-    this.destroyRef.onDestroy(() => sub.unsubscribe());
+    const editingNote = this.selectedNoteToEdit();
+    if (editingNote) {
+      this.noteStore.updateNote(editingNote.id, { ...editingNote, ...noteRequest });
+    } else {
+      this.noteStore.createNote(noteRequest);
+    }
+    this.selectedNoteToEdit.set(null);
+    this.showDialog.set(false);
   }
-
-
 }
