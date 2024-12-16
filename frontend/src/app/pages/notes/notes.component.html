@@ -4,11 +4,17 @@
             (click)="createNewNote()"></button>
   </div>
 
-  <app-note-list></app-note-list>
+  @if (noteStore.loading) {
+    <p-progressSpinner />
+  } @else if (!noteStore.error && notes()) {
+    <app-note-list [notes]="notes()!" (edit)="openEditDialog($event)"></app-note-list>
+  } @else {
+    <p>An error occurred: {{ noteStore.error }}</p>
+  }
 
   <app-modal [(visible)]="showDialog"
              (onConfirm)="showDialog.set(false)">
-    <app-note-form (formSubmit)="saveNote($event)"/>
+    <app-note-form (formSubmit)="saveNote($event)" [initialData]="selectedNoteToEdit()"/>
   </app-modal>
 
 </div>

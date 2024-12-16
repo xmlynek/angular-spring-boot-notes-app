@@ -1,5 +1,4 @@
 import {Component, inject, signal} from '@angular/core';
-import {Note} from "../../components/notes/notes.model";
 import {NoteListComponent} from "../../components/notes/note-list/note-list.component";
 import {ButtonDirective} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
@@ -8,7 +7,9 @@ import {FormsModule} from "@angular/forms";
 import {NoteFormComponent} from "../../components/notes/note-form/note-form.component";
 import {ModalComponent} from "../../shared/modal/modal.component";
 import {NoteFormModel} from "../../components/notes/note-form/note-form.model";
-import {NotesService} from "../../components/notes/notes.service";
+import {ApiModule, Note} from "../../core/modules/openapi";
+import {NoteStore} from "../../components/notes/note.store";
+import {ProgressSpinnerModule} from "primeng/progressspinner";
 
 @Component({
   selector: 'app-notes',
@@ -19,33 +20,43 @@ import {NotesService} from "../../components/notes/notes.service";
     ButtonDirective,
     FormsModule,
     InputTextModule,
-    InputTextareaModule],
+    InputTextareaModule,
+    ApiModule,
+    ProgressSpinnerModule,
+  ],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.scss'
 })
 export class NotesComponent {
 
-  private notesService = inject(NotesService);
-  selectedNote = signal<Note | null>(null); // For modifying notes
-  showDialog = signal<boolean>(false); // For showing the create/edit dialog
+  showDialog = signal<boolean>(false);
+  selectedNoteToEdit = signal<Note | null>(null);
 
+  constructor() {
+    this.noteStore.reloadNotes();
+  }
+
+  protected noteStore = inject(NoteStore);
+  notes = this.noteStore.notes;
 
   createNewNote() {
-    this.selectedNote.set(null); // Clear selection
-    this.showDialog.set(true); // Show dialog
+    this.selectedNoteToEdit.set(null);
+    this.showDialog.set(true);
+  }
+
+  openEditDialog(note: Note) {
+    this.selectedNoteToEdit.set(note);
+    this.showDialog.set(true);
   }
 
   saveNote(noteRequest: NoteFormModel) {
-    this.notesService.addNote({
-      ...noteRequest,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      authorId: "xd",
-      isPinned: false,
-      id: Math.random().toString(36)
-    })
+    const editingNote = this.selectedNoteToEdit();
+    if (editingNote) {
+      this.noteStore.updateNote(editingNote.id, { ...editingNote, ...noteRequest });
+    } else {
+      this.noteStore.createNote(noteRequest);
+    }
+    this.selectedNoteToEdit.set(null);
     this.showDialog.set(false);
   }
-
-
 }

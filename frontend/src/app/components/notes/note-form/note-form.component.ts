@@ -1,15 +1,15 @@
-import {Component, inject, input, OnInit, output} from '@angular/core';
+import {Component, effect, inject, input, output} from '@angular/core';
 import {
   FormBuilder, FormControl,
   ReactiveFormsModule,
   Validators
 } from "@angular/forms";
 import {ButtonDirective} from "primeng/button";
-import {Note} from "../notes.model";
 import {MessageModule} from "primeng/message";
 import {InputTextModule} from "primeng/inputtext";
 import {InputTextareaModule} from "primeng/inputtextarea";
 import {NoteFormModel} from "./note-form.model";
+import {Note} from "../../../core/modules/openapi";
 
 @Component({
   selector: 'app-note-form',
@@ -17,13 +17,13 @@ import {NoteFormModel} from "./note-form.model";
   templateUrl: './note-form.component.html',
   styleUrl: './note-form.component.scss'
 })
-export class NoteFormComponent implements OnInit {
+export class NoteFormComponent {
   protected readonly CONTENT_MAX_LENGTH: number = 4096;
   protected readonly NAME_MAX_LENGTH: number = 64;
   protected readonly TAG_MAX_LENGTH: number = 16;
 
   private formBuilder = inject(FormBuilder);
-  initialData = input<Note>();
+  initialData = input.required<Note | null>();
   formSubmit = output<NoteFormModel>();
 
   noteForm = this.formBuilder.group({
@@ -32,13 +32,19 @@ export class NoteFormComponent implements OnInit {
     tags: this.formBuilder.array([]),
   })
 
-  ngOnInit(): void {
-    if (this.initialData()) {
-      const {name, content, tags} = this.initialData()!;
-      this.noteForm.patchValue({name, content})
+  constructor() {
+    effect(() => {
       this.tags.clear();
-      tags.forEach((tag) => this.addTag(tag));
-    }
+      if (this.initialData()) {
+        this.noteForm.patchValue({
+          name: this.initialData()!.name,
+          content: this.initialData()!.content,
+        });
+        this.initialData()!.tags?.forEach((tag) => this.addTag(tag));
+      } else {
+        this.noteForm.reset();
+      }
+    });
   }
 
   get tags() {

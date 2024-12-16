@@ -4,7 +4,7 @@ info:
   description: API for managing notes
   version: 1.0.0
 servers:
-  - url: http://localhost:8080/api
+  - url: http://localhost:8080/api/v1
     description: Main API endpoint
 tags:
   - name: Notes
@@ -130,6 +130,15 @@ components:
           description: Whether the note is pinned
     Note:
       type: object
+      required:
+        - id
+        - name
+        - content
+        - createdAt
+        - updatedAt
+        - authorId
+        - tags
+        - isPinned
       properties:
         id:
           type: string

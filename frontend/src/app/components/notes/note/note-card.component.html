@@ -2,7 +2,7 @@
   <ng-template pTemplate="header">
     <div class="note-header">
       <h3>{{ note().name }}</h3>
-      <span class="note-date">{{ note().createdAt | date: 'medium' }}</span>
+      <span class="note-date">Modified at  {{ note().updatedAt | date: 'medium' }}</span>
     </div>
   </ng-template>
 
