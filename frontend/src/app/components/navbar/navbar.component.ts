@@ -1,26 +1,44 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {MenubarModule} from "primeng/menubar";
 import {ButtonDirective} from "primeng/button";
 import {MenuItem, PrimeNGConfig} from "primeng/api";
 import {RouterLink} from "@angular/router";
+import {KeycloakService} from "keycloak-angular";
+import {MenuModule} from "primeng/menu";
 
 @Component({
     selector: 'app-navbar',
     imports: [
         MenubarModule,
         ButtonDirective,
-        RouterLink
+        RouterLink,
+        MenuModule
     ],
     templateUrl: './navbar.component.html',
     styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent implements OnInit {
-  menuItems = signal<Array<MenuItem>>([]);
+  private keycloakService = inject(KeycloakService);
+  private primengConfig = inject(PrimeNGConfig);
 
-  constructor(private primengConfig: PrimeNGConfig) {}
+  menuItems = signal<Array<MenuItem>>([]);
+  isLoggedIn = signal<boolean>(this.keycloakService.isLoggedIn());
+
+  profileMenuItems: MenuItem[] = [
+    {
+      label: 'Settings',
+      icon: 'pi pi-cog',
+      command: () => this.handleManageAccount(),
+    },
+    {
+      label: 'Logout',
+      icon: 'pi pi-sign-out',
+      command: () => this.handleLogout(),
+    },
+  ];
 
   ngOnInit() {
-    this.primengConfig.ripple = true; // Enable PrimeNG ripple effect
+    this.primengConfig.ripple = true;
     this.menuItems.set([
       {
         label: 'Home',
@@ -37,26 +55,18 @@ export class NavbarComponent implements OnInit {
         icon: 'pi pi-info-circle',
         routerLink: ['/about'],
       },
-      {
-        label: 'Profile',
-        icon: 'pi pi-user',
-        items: [
-          {
-            label: 'Settings',
-            icon: 'pi pi-cog',
-            routerLink: ['/settings'],
-          },
-          {
-            label: 'Logout',
-            icon: 'pi pi-sign-out',
-            command: () => this.logout(),
-          },
-        ],
-      },
     ]);
   }
 
-    logout() {
-      console.log('User logged out'); // Implement logout logic here
+    handleLogin() {
+      this.keycloakService.login();
+    }
+
+    handleManageAccount() {
+      this.keycloakService.getKeycloakInstance().accountManagement();
+    }
+
+    handleLogout() {
+      this.keycloakService.logout();
     }
 }

@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="NotesAppServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <option name="ACTIVE_PROFILES" value="dev" />
     <module name="notes-app-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.filip.demo.notesappservice.NotesAppServiceApplication" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/notes-app-service" />

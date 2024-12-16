@@ -7,3 +7,17 @@ services:
       - 'MONGO_INITDB_ROOT_USERNAME=root'
     ports:
       - '27017:27017'
+  keycloak:
+    image: quay.io/keycloak/keycloak:20.0.3
+    environment:
+      KEYCLOAK_USER: user
+      KEYCLOAK_PASSWORD: password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command:
+      - start-dev
+      - --import-realm
+    volumes:
+      - ./notes_realm_export.json:/opt/keycloak/data/import/notes_realm_export.json
+    ports:
+      - "8090:8080"

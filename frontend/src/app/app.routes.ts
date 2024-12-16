@@ -3,6 +3,7 @@ import {HomeComponent} from "./pages/home/home.component";
 import {AboutComponent} from "./pages/about/about.component";
 import {NotesComponent} from "./pages/notes/notes.component";
 import {NotePageComponent} from "./pages/note/note.component";
+import {authGuard} from "./auth/auth.guard";
 
 export const routes: Routes = [
   {
@@ -20,6 +21,7 @@ export const routes: Routes = [
   },
   {
     path: 'notes',
+    canActivate: [authGuard],
     children: [
       { path: '', component: NotesComponent },
       { path: ':noteId', component: NotePageComponent },
