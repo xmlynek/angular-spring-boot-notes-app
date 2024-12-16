@@ -9,6 +9,8 @@ import {provideAnimationsAsync} from "@angular/platform-browser/animations/async
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
 import {KeycloakBearerInterceptor, KeycloakService} from "keycloak-angular";
 import {initializeKeycloak} from "./keycloak/init-keycloak";
+import {providePrimeNG} from "primeng/config";
+import Material from '@primeng/themes/lara';
 
 const KeycloakBearerInterceptorProvider: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -24,7 +26,16 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     KeycloakService,
     provideAppInitializer(() => initializeKeycloak(inject(KeycloakService))()),
-    KeycloakBearerInterceptorProvider
+    KeycloakBearerInterceptorProvider,
+    providePrimeNG({
+      theme: {
+        preset: Material,
+        options: {
+          darkModeSelector: '.dark'
+        }
+      },
+      ripple: true
+    })
   ]
 };
 

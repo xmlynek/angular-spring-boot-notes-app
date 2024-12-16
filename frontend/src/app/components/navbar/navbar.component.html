@@ -1,8 +1,8 @@
 <p-menubar [model]="menuItems()" class="navbar-menu">
-  <ng-template pTemplate="start">
+  <ng-template #start>
     <div class="logo" routerLink="">NotesApp</div>
   </ng-template>
-  <ng-template pTemplate="end">
+  <ng-template #end>
     @if (isLoggedIn()) {
       <p-menu #profileMenu [model]="profileMenuItems" popup="true"></p-menu>
       <button pButton

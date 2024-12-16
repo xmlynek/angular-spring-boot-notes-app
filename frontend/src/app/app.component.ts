@@ -12,6 +12,5 @@ import {ConfirmationService} from "primeng/api";
   providers: [ConfirmationService]
 })
 export class AppComponent {
-  title = 'notes-app';
 
 }

@@ -12,7 +12,7 @@
   <!-- Content Field -->
   <div class="form-group">
     <label for="content">Content</label>
-    <textarea pInputTextarea id="content" formControlName="content" rows="5"
+    <textarea pTextarea id="content" formControlName="content" rows="5"
               placeholder="Enter note content"></textarea>
     @if (isFormControlInvalid(noteForm.controls.content)) {
       <p-message severity="error"
@@ -40,10 +40,8 @@
             (click)="addTag()"></button>
   </div>
 
-  <!-- Submit Button -->
   <div class="form-actions">
     <button pButton type="submit" label="Save" icon="pi pi-check" class="p-button-primary"
             [disabled]="noteForm.invalid"></button>
-    <!--    <button pButton type="button" label="Cancel" icon="pi pi-times" class="p-button-secondary"></button>-->
   </div>
 </form>

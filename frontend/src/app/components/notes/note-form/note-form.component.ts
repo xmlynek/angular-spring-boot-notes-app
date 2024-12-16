@@ -7,13 +7,13 @@ import {
 import {ButtonDirective} from "primeng/button";
 import {MessageModule} from "primeng/message";
 import {InputTextModule} from "primeng/inputtext";
-import {InputTextareaModule} from "primeng/inputtextarea";
 import {NoteFormModel} from "./note-form.model";
 import {Note} from "../../../core/modules/openapi";
+import {TextareaModule} from "primeng/textarea";
 
 @Component({
   selector: 'app-note-form',
-  imports: [ReactiveFormsModule, ButtonDirective, MessageModule, InputTextModule, InputTextareaModule],
+  imports: [ReactiveFormsModule, ButtonDirective, MessageModule, InputTextModule, TextareaModule],
   templateUrl: './note-form.component.html',
   styleUrl: './note-form.component.scss'
 })

@@ -1,7 +1,7 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {MenubarModule} from "primeng/menubar";
 import {ButtonDirective} from "primeng/button";
-import {MenuItem, PrimeNGConfig} from "primeng/api";
+import {MenuItem} from "primeng/api";
 import {RouterLink} from "@angular/router";
 import {KeycloakService} from "keycloak-angular";
 import {MenuModule} from "primeng/menu";
@@ -19,7 +19,6 @@ import {MenuModule} from "primeng/menu";
 })
 export class NavbarComponent implements OnInit {
   private keycloakService = inject(KeycloakService);
-  private primengConfig = inject(PrimeNGConfig);
 
   menuItems = signal<Array<MenuItem>>([]);
   isLoggedIn = signal<boolean>(this.keycloakService.isLoggedIn());
@@ -38,7 +37,6 @@ export class NavbarComponent implements OnInit {
   ];
 
   ngOnInit() {
-    this.primengConfig.ripple = true;
     this.menuItems.set([
       {
         label: 'Home',
@@ -67,6 +65,6 @@ export class NavbarComponent implements OnInit {
     }
 
     handleLogout() {
-      this.keycloakService.logout();
+      this.keycloakService.logout(window.location.origin + "/home");
     }
 }
