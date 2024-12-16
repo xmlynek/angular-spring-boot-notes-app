@@ -1,18 +1,30 @@
 import {
-  ApplicationConfig,
-  provideExperimentalZonelessChangeDetection
+  ApplicationConfig, inject, provideAppInitializer,
+  provideExperimentalZonelessChangeDetection, Provider
 } from '@angular/core';
 import {provideRouter, withComponentInputBinding} from '@angular/router';
 
-import { routes } from './app.routes';
+import {routes} from './app.routes';
 import {provideAnimationsAsync} from "@angular/platform-browser/animations/async";
-import {provideHttpClient} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
+import {KeycloakBearerInterceptor, KeycloakService} from "keycloak-angular";
+import {initializeKeycloak} from "./keycloak/init-keycloak";
+
+const KeycloakBearerInterceptorProvider: Provider = {
+  provide: HTTP_INTERCEPTORS,
+  useClass: KeycloakBearerInterceptor,
+  multi: true
+};
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideExperimentalZonelessChangeDetection(),
     provideAnimationsAsync(),
-    provideHttpClient(),
-    provideRouter(routes, withComponentInputBinding())
+    provideHttpClient(withInterceptorsFromDi()),
+    provideRouter(routes, withComponentInputBinding()),
+    KeycloakService,
+    provideAppInitializer(() => initializeKeycloak(inject(KeycloakService))()),
+    KeycloakBearerInterceptorProvider
   ]
 };
+

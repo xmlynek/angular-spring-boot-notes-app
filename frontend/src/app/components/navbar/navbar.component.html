@@ -3,7 +3,18 @@
     <div class="logo" routerLink="">NotesApp</div>
   </ng-template>
   <ng-template pTemplate="end">
-    <button pButton label="Login" icon="pi pi-sign-in" class="p-button-raised p-button-primary"></button>
+    @if (isLoggedIn()) {
+      <p-menu #profileMenu [model]="profileMenuItems" popup="true"></p-menu>
+      <button pButton
+              label="Profile"
+              icon="pi pi-user"
+              class="p-button-rounded p-button-text"
+              (click)="profileMenu.toggle($event)">
+      </button>
+    } @else {
+      <button pButton label="Login" icon="pi pi-sign-in" class="p-button-raised p-button-primary"
+              (click)="handleLogin()"></button>
+    }
   </ng-template>
 </p-menubar>
 
