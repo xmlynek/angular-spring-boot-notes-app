@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NoteFormComponent } from './note-form.component';
+import {provideExperimentalZonelessChangeDetection} from "@angular/core";
 
 describe('NoteFormComponent', () => {
   let component: NoteFormComponent;
@@ -8,7 +9,11 @@ describe('NoteFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NoteFormComponent]
+      imports: [NoteFormComponent],
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+
+      ]
     })
     .compileComponents();
 
@@ -16,6 +21,8 @@ describe('NoteFormComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+
+  // TODO::: test
 
   it('should create', () => {
     expect(component).toBeTruthy();
