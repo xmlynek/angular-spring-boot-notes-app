@@ -29,15 +29,14 @@ import {TextareaModule} from "primeng/textarea";
 })
 export class NotesComponent {
 
+  protected noteStore = inject(NoteStore);
+  notes = this.noteStore.notes;
   showDialog = signal<boolean>(false);
   selectedNoteToEdit = signal<Note | null>(null);
 
   constructor() {
     this.noteStore.reloadNotes();
   }
-
-  protected noteStore = inject(NoteStore);
-  notes = this.noteStore.notes;
 
   createNewNote() {
     this.selectedNoteToEdit.set(null);

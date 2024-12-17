@@ -12,8 +12,7 @@
     <p>An error occurred: {{ noteStore.error }}</p>
   }
 
-  <app-modal [(visible)]="showDialog"
-             (onConfirm)="showDialog.set(false)">
+  <app-modal [(visible)]="showDialog">
     <app-note-form (formSubmit)="saveNote($event)" [initialData]="selectedNoteToEdit()"/>
   </app-modal>
 

@@ -37,10 +37,6 @@ export class DeleteButtonComponent {
 
   handleDelete() {
     this.onConfirm.emit();
-    // this.onDelete.emit(this.itemId); // Emit delete event to parent
-    // if (this.navigateTo) {
-    //   this.router.navigate([this.navigateTo]); // Navigate if a path is provided
-    // }
   }
 
 }
