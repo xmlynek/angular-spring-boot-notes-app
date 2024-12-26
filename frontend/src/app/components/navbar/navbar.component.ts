@@ -3,8 +3,8 @@ import {MenubarModule} from "primeng/menubar";
 import {ButtonDirective} from "primeng/button";
 import {MenuItem} from "primeng/api";
 import {RouterLink} from "@angular/router";
-import {KeycloakService} from "keycloak-angular";
 import {MenuModule} from "primeng/menu";
+import Keycloak from "keycloak-js";
 
 @Component({
     selector: 'app-navbar',
@@ -18,10 +18,10 @@ import {MenuModule} from "primeng/menu";
     styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent implements OnInit {
-  private keycloakService = inject(KeycloakService);
+  private keycloak = inject(Keycloak);
 
   menuItems = signal<Array<MenuItem>>([]);
-  isLoggedIn = signal<boolean>(this.keycloakService.isLoggedIn());
+  isLoggedIn = signal<boolean>(this.keycloak.authenticated || false);
 
   profileMenuItems: MenuItem[] = [
     {
@@ -57,14 +57,14 @@ export class NavbarComponent implements OnInit {
   }
 
     handleLogin() {
-      this.keycloakService.login();
+      this.keycloak.login({redirectUri: window.location.origin + '/home'});
     }
 
     handleManageAccount() {
-      this.keycloakService.getKeycloakInstance().accountManagement();
+      this.keycloak.accountManagement();
     }
 
     handleLogout() {
-      this.keycloakService.logout(window.location.origin + "/home");
+      this.keycloak.logout({redirectUri: window.location.origin + "/home"});
     }
 }
