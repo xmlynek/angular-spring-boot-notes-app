@@ -1,4 +1,4 @@
-import {Component, inject, input, output, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, input, output, signal} from '@angular/core';
 import {TagModule} from "primeng/tag";
 import {DatePipe} from "@angular/common";
 import {CardModule} from "primeng/card";
@@ -25,7 +25,8 @@ import {NoteStore} from "../note.store";
     DeleteButtonComponent
   ],
   templateUrl: './note-details.component.html',
-  styleUrl: './note-details.component.scss'
+  styleUrl: './note-details.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteDetailsComponent {
 

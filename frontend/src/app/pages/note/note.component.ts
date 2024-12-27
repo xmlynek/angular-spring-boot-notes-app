@@ -1,4 +1,4 @@
-import {Component, computed, inject, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angular/core';
 import {NoteDetailsComponent} from "../../components/notes/note-details/note-details.component";
 import {rxResource} from "@angular/core/rxjs-interop";
 import {NotesService} from "../../core/modules/openapi";
@@ -9,7 +9,8 @@ import {NotesService} from "../../core/modules/openapi";
     NoteDetailsComponent,
   ],
   templateUrl: './note.component.html',
-  styleUrl: './note.component.scss'
+  styleUrl: './note.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotePageComponent {
 

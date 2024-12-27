@@ -1,4 +1,4 @@
-import {Component, inject, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, input, output} from '@angular/core';
 import {ConfirmationService, ConfirmEventType} from "primeng/api";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {ButtonDirective} from "primeng/button";
@@ -11,6 +11,7 @@ import {ButtonDirective} from "primeng/button";
   ],
   templateUrl: './delete-button.component.html',
   styleUrl: './delete-button.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeleteButtonComponent {
 

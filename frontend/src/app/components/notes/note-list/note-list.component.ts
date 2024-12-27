@@ -1,4 +1,4 @@
-import {Component, computed, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
 import {NoteCardComponent} from "../note/note-card.component";
 import {RouterLink} from "@angular/router";
 import {CardModule} from "primeng/card";
@@ -12,6 +12,7 @@ import {Note} from "../../../core/modules/openapi";
   ],
   templateUrl: './note-list.component.html',
   styleUrl: './note-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteListComponent {
 

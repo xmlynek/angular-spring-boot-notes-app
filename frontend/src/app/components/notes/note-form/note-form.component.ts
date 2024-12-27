@@ -1,4 +1,4 @@
-import {Component, effect, inject, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, inject, input, output} from '@angular/core';
 import {
   FormBuilder, FormControl,
   ReactiveFormsModule,
@@ -15,7 +15,8 @@ import {TextareaModule} from "primeng/textarea";
   selector: 'app-note-form',
   imports: [ReactiveFormsModule, ButtonDirective, MessageModule, InputTextModule, TextareaModule],
   templateUrl: './note-form.component.html',
-  styleUrl: './note-form.component.scss'
+  styleUrl: './note-form.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteFormComponent {
   protected readonly CONTENT_MAX_LENGTH: number = 4096;

@@ -1,4 +1,4 @@
-import {Component, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {NoteListComponent} from "../../components/notes/note-list/note-list.component";
 import {ButtonDirective} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
@@ -25,7 +25,8 @@ import {TextareaModule} from "primeng/textarea";
     ProgressSpinnerModule,
   ],
   templateUrl: './notes.component.html',
-  styleUrl: './notes.component.scss'
+  styleUrl: './notes.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotesComponent {
 

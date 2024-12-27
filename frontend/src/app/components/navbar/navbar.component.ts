@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnInit, signal} from '@angular/core';
 import {MenubarModule} from "primeng/menubar";
 import {ButtonDirective} from "primeng/button";
 import {MenuItem} from "primeng/api";
@@ -7,15 +7,16 @@ import {MenuModule} from "primeng/menu";
 import Keycloak from "keycloak-js";
 
 @Component({
-    selector: 'app-navbar',
-    imports: [
-        MenubarModule,
-        ButtonDirective,
-        RouterLink,
-        MenuModule
-    ],
-    templateUrl: './navbar.component.html',
-    styleUrl: './navbar.component.scss'
+  selector: 'app-navbar',
+  imports: [
+    MenubarModule,
+    ButtonDirective,
+    RouterLink,
+    MenuModule
+  ],
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarComponent implements OnInit {
   private keycloak = inject(Keycloak);
@@ -56,15 +57,15 @@ export class NavbarComponent implements OnInit {
     ]);
   }
 
-    handleLogin() {
-      this.keycloak.login({redirectUri: window.location.origin + '/home'});
-    }
+  handleLogin() {
+    this.keycloak.login({redirectUri: window.location.origin + '/home'});
+  }
 
-    handleManageAccount() {
-      this.keycloak.accountManagement();
-    }
+  handleManageAccount() {
+    this.keycloak.accountManagement();
+  }
 
-    handleLogout() {
-      this.keycloak.logout({redirectUri: window.location.origin + "/home"});
-    }
+  handleLogout() {
+    this.keycloak.logout({redirectUri: window.location.origin + "/home"});
+  }
 }
