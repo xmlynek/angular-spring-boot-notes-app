@@ -4,12 +4,12 @@
             (click)="createNewNote()"></button>
   </div>
 
-  @if (noteStore.loading) {
+  @if (noteStore.loading()) {
     <p-progressSpinner />
-  } @else if (!noteStore.error && notes()) {
+  } @else if (!noteStore.error() && notes()) {
     <app-note-list [notes]="notes()!" (edit)="openEditDialog($event)"></app-note-list>
   } @else {
-    <p>An error occurred: {{ noteStore.error }}</p>
+    <p>An error occurred: {{ noteStore.error() }}</p>
   }
 
   <app-modal [(visible)]="showDialog">
