@@ -33,7 +33,7 @@ export class NoteDetailsComponent {
   private noteStore = inject(NoteStore);
   private router = inject(Router);
 
-  updated = output<void>();
+  updated = output<NoteFormModel>();
 
   note = input.required<Note>();
   isEditNoteModalShow = signal<boolean>(false);
@@ -41,7 +41,7 @@ export class NoteDetailsComponent {
   handleNoteUpdate(updateNoteData: NoteFormModel) {
     this.noteStore.updateNote(this.note().id, updateNoteData);
     this.isEditNoteModalShow.set(false);
-    this.updated.emit();
+    this.updated.emit(updateNoteData);
   }
 
   handleNoteDelete() {

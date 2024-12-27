@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angu
 import {NoteDetailsComponent} from "../../components/notes/note-details/note-details.component";
 import {rxResource} from "@angular/core/rxjs-interop";
 import {NotesService} from "../../core/modules/openapi";
+import {NoteFormModel} from "../../components/notes/note-form/note-form.model";
 
 @Component({
   selector: 'app-note-page',
@@ -24,8 +25,8 @@ export class NotePageComponent {
 
   noteById = computed(() => this.noteResourceRef.value())
 
-  handleUpdate() {
-    this.noteResourceRef.reload();
+  handleUpdate(updateNoteData: NoteFormModel) {
+    this.noteResourceRef.update(actualNote => ({...actualNote!, ...updateNoteData}));
   }
 
 }

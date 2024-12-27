@@ -1,6 +1,6 @@
 @if (noteById()) {
   <div class="note-details">
-    <app-note-details [note]="noteById()!" (updated)="handleUpdate()"/>
+    <app-note-details [note]="noteById()!" (updated)="handleUpdate($event)"/>
   </div>
 } @else {
   <p class="fallback-text">Note not found.</p>
