@@ -19,11 +19,11 @@ export class NoteStore {
   }
 
   get loading() {
-    return this.notesResourceRef.isLoading();
+    return this.notesResourceRef.isLoading;
   }
 
   get error() {
-    return this.notesResourceRef.error();
+    return this.notesResourceRef.error;
   }
 
   createNote(note: NoteFormModel) {

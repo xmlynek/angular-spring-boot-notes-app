@@ -2,34 +2,31 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {NavbarComponent} from './navbar.component';
 import {provideExperimentalZonelessChangeDetection} from "@angular/core";
-import {KeycloakService} from "keycloak-angular";
-import {NoteStore} from "../notes/note.store";
-import {ActivatedRoute, RouterLink} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
+import Keycloak from "keycloak-js";
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
-  let mockKeycloakService: jasmine.SpyObj<KeycloakService>;
+  let mockKeycloak: jasmine.SpyObj<Keycloak>;
 
   const fakeActivatedRoute = {
     snapshot: {data: {}}
   } as ActivatedRoute;
 
   beforeEach(async () => {
-    mockKeycloakService = jasmine.createSpyObj('KeycloakService', [
-      'isLoggedIn',
+    mockKeycloak = jasmine.createSpyObj('Keycloak', [
+      'authenticated',
       'login',
       'logout',
-      'getKeycloakInstance'
+      'accountManagement'
     ]);
-    mockKeycloakService.isLoggedIn.and.returnValue(true);
-
 
     await TestBed.configureTestingModule({
       imports: [NavbarComponent],
       providers: [
         provideExperimentalZonelessChangeDetection(),
-        {provide: KeycloakService, useValue: mockKeycloakService},
+        {provide: Keycloak, useValue: mockKeycloak},
         {provide: ActivatedRoute, useValue: fakeActivatedRoute}
       ]
     })
@@ -46,20 +43,17 @@ describe('NavbarComponent', () => {
 
   it('should call login on KeycloakService when handleLogin is called', () => {
     component.handleLogin();
-    expect(mockKeycloakService.login).toHaveBeenCalled();
+    expect(mockKeycloak.login).toHaveBeenCalled();
   });
 
   it('should call accountManagement on Keycloak instance when handleManageAccount is called', () => {
-    const mockKeycloakInstance = jasmine.createSpyObj('KeycloakInstance', ['accountManagement']);
-    mockKeycloakService.getKeycloakInstance.and.returnValue(mockKeycloakInstance);
-
     component.handleManageAccount();
-    expect(mockKeycloakInstance.accountManagement).toHaveBeenCalled();
+    expect(mockKeycloak.accountManagement).toHaveBeenCalled();
   });
 
   it('should call KeycloakService logout method when logout button is clicked', () => {
     component.handleLogout()
 
-    expect(mockKeycloakService.logout).toHaveBeenCalled();
+    expect(mockKeycloak.logout).toHaveBeenCalled();
   });
 });
