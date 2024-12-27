@@ -1,5 +1,6 @@
 package com.filip.demo.notesappservice.service;
 
+import com.filip.demo.notesappservice.exception.NoteNotFoundException;
 import com.filip.demo.notesappservice.model.Note;
 import com.filip.demo.notesappservice.repository.NoteRepository;
 import java.util.List;
@@ -12,18 +13,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class NoteService {
 
   private final NoteRepository noteRepository;
+  private final UserProvider userProvider;
 
   public List<Note> findAll() {
-    return noteRepository.findAll();
+    return noteRepository.findAllByAuthorId(userProvider.getUserId());
   }
 
   public Note findById(String noteId) {
-    return noteRepository.findById(noteId).orElseThrow();
+    return noteRepository.findByIdAndAuthorId(noteId, userProvider.getUserId())
+        .orElseThrow(NoteNotFoundException::new);
   }
 
   @Transactional
   public Note createNote(Note note) {
-    // TODO: add author
+    note.setAuthorId(userProvider.getUserId());
     return noteRepository.save(note);
   }
 
@@ -40,6 +43,6 @@ public class NoteService {
 
   @Transactional
   public void deleteById(String noteId) {
-    noteRepository.deleteById(noteId);
+    noteRepository.deleteByIdAndAuthorId(noteId, userProvider.getUserId());
   }
 }
