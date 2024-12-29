@@ -33,7 +33,7 @@ jobs:
 
       - name: Build and test backend
         run: |
-          cd backend
+          cd notes-app-service
           ./mvnw clean install
 
   frontend-tests:
