@@ -1,4 +1,11 @@
-import {ChangeDetectionStrategy, Component, effect, inject, input, output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+  output
+} from '@angular/core';
 import {
   FormBuilder, FormControl,
   ReactiveFormsModule,

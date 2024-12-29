@@ -5,7 +5,7 @@ import {TagModule} from "primeng/tag";
 import {ButtonDirective} from "primeng/button";
 import {DeleteButtonComponent} from "../../../shared/delete-button/delete-button.component";
 import {Note} from "../../../core/modules/openapi";
-import {NoteStore} from "../note.store";
+import {NotesStore} from "../../../store/notes.store";
 
 @Component({
   selector: 'app-note-card',
@@ -22,13 +22,13 @@ import {NoteStore} from "../note.store";
 })
 export class NoteCardComponent {
 
-  private noteStore = inject(NoteStore);
+  private readonly notesStore = inject(NotesStore);
   note = model.required<Note>();
   edit = output<Note>();
 
   togglePinned = (event: MouseEvent) => {
     event.stopPropagation();
-    this.noteStore.updateNote(this.note().id, {...this.note(), isPinned: !this.note().isPinned});
+    this.notesStore.updateNote(this.note().id, {...this.note(), isPinned: !this.note().isPinned});
   }
 
   handleEdit(event: MouseEvent) {
@@ -37,6 +37,6 @@ export class NoteCardComponent {
   }
 
   handleDelete() {
-    this.noteStore.deleteNote(this.note().id);
+    this.notesStore.deleteNote(this.note().id);
   }
 }

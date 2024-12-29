@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, input, output, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, input, signal} from '@angular/core';
 import {TagModule} from "primeng/tag";
 import {DatePipe} from "@angular/common";
 import {CardModule} from "primeng/card";
@@ -10,7 +10,7 @@ import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {Router} from "@angular/router";
 import {DeleteButtonComponent} from "../../../shared/delete-button/delete-button.component";
 import {Note} from "../../../core/modules/openapi";
-import {NoteStore} from "../note.store";
+import {NotesStore} from "../../../store/notes.store";
 
 @Component({
   selector: 'app-note-details',
@@ -30,22 +30,21 @@ import {NoteStore} from "../note.store";
 })
 export class NoteDetailsComponent {
 
-  private noteStore = inject(NoteStore);
+  private readonly notesStore = inject(NotesStore);
   private router = inject(Router);
-
-  updated = output<NoteFormModel>();
 
   note = input.required<Note>();
   isEditNoteModalShow = signal<boolean>(false);
 
-  handleNoteUpdate(updateNoteData: NoteFormModel) {
-    this.noteStore.updateNote(this.note().id, updateNoteData);
+  async handleNoteUpdate(updateNoteData: NoteFormModel) {
+    await this.notesStore.updateNote(this.note().id, updateNoteData);
     this.isEditNoteModalShow.set(false);
-    this.updated.emit(updateNoteData);
   }
 
-  handleNoteDelete() {
-    this.noteStore.deleteNote(this.note().id);
-    this.router.navigate(['/notes'], {replaceUrl: true});
+  async handleNoteDelete() {
+    this.notesStore.deleteNote(this.note().id)
+      .then(() => {
+        this.router.navigate(['/notes'], {replaceUrl: true})
+      });
   }
 }

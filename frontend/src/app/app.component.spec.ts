@@ -1,12 +1,27 @@
-import { TestBed } from '@angular/core/testing';
-import { AppComponent } from './app.component';
+import {TestBed} from '@angular/core/testing';
+import {AppComponent} from './app.component';
 import {provideExperimentalZonelessChangeDetection} from "@angular/core";
+import Keycloak from "keycloak-js";
 
 describe('AppComponent', () => {
+  let mockKeycloak: jasmine.SpyObj<Keycloak>;
+
   beforeEach(async () => {
+    mockKeycloak = jasmine.createSpyObj('Keycloak', [
+      'authenticated',
+      'login',
+      'logout',
+      'accountManagement'
+    ]);
+
     await TestBed.configureTestingModule({
       imports: [AppComponent],
-      providers: [provideExperimentalZonelessChangeDetection()]
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+        {
+          provide: Keycloak, useValue: mockKeycloak
+        },
+      ]
     }).compileComponents();
   });
 

@@ -1,0 +1,7 @@
+@if (isLoading()) {
+  <p-progressSpinner/>
+} @else if (!error() && hasData()) {
+  <ng-content/>
+} @else {
+  <p class="fallback-text">{{ errorFallbackText() }}</p>
+}

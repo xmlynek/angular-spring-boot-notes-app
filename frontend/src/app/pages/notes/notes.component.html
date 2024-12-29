@@ -4,15 +4,13 @@
             (click)="createNewNote()"></button>
   </div>
 
-  @if (noteStore.loading()) {
-    <p-progressSpinner />
-  } @else if (!noteStore.error() && notes()) {
+  <app-loading-content-wrapper [isLoading]="isLoading()" [error]="error()"
+                               [hasData]="notes().length > 0"
+                               errorFallbackText="An error occurred: {{ error() }}">
     <app-note-list [notes]="notes()!" (edit)="openEditDialog($event)"></app-note-list>
-  } @else {
-    <p>An error occurred: {{ noteStore.error() }}</p>
-  }
+  </app-loading-content-wrapper>
 
-  <app-modal [(visible)]="showDialog">
+  <app-modal [(visible)]="isDialogShown">
     <app-note-form (formSubmit)="saveNote($event)" [initialData]="selectedNoteToEdit()"/>
   </app-modal>
 
