@@ -39,6 +39,7 @@ export class NoteDetailsComponent {
   async handleNoteUpdate(updateNoteData: NoteFormModel) {
     await this.notesStore.updateNote(this.note().id, updateNoteData);
     this.isEditNoteModalShow.set(false);
+    await this.router.navigateByUrl(this.router.url);
   }
 
   async handleNoteDelete() {

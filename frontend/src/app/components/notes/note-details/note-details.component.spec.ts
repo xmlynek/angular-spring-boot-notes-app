@@ -31,7 +31,7 @@ describe('NoteDetailsComponent', () => {
   };
 
   beforeEach(async () => {
-    mockRouter = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    mockRouter = jasmine.createSpyObj<Router>('Router', ['navigate', 'navigateByUrl']);
 
     await TestBed.configureTestingModule({
       imports: [NoteDetailsComponent],
@@ -65,6 +65,7 @@ describe('NoteDetailsComponent', () => {
 
     expect(notesStoreMock.updateNote).toHaveBeenCalledWith(mockNote.id, updateNoteData);
     expect(component.isEditNoteModalShow()).toBe(false);
+    expect(mockRouter.navigateByUrl).toHaveBeenCalled();
   });
 
   it('should handle note delete correctly', async () => {

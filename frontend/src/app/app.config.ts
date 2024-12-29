@@ -2,7 +2,7 @@ import {
   ApplicationConfig,
   provideExperimentalZonelessChangeDetection
 } from '@angular/core';
-import {provideRouter, withComponentInputBinding} from '@angular/router';
+import {provideRouter, withComponentInputBinding, withRouterConfig} from '@angular/router';
 
 import {routes} from './app.routes';
 import {provideAnimationsAsync} from "@angular/platform-browser/animations/async";
@@ -24,7 +24,11 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideKeycloakAngular(),
     provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
-    provideRouter(routes, withComponentInputBinding()),
+    provideRouter(
+      routes,
+      withComponentInputBinding(),
+      withRouterConfig({onSameUrlNavigation: 'reload'})
+    ),
     providePrimeNG({
       theme: {
         preset: Material,

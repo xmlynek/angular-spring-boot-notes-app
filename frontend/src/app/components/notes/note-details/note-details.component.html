@@ -23,7 +23,7 @@
   <div class="tags">
     <p class="tags-label">Tags:</p>
     <div class="tags-list">
-      @for (tag of note().tags; track tag) {
+      @for (tag of note().tags; track $index) {
         <p-tag [value]="tag" styleClass="tag"></p-tag>
       }
     </div>

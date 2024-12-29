@@ -47,13 +47,15 @@ describe('NoteComponent', () => {
     fixture = TestBed.createComponent(NotePageComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('noteId', mockNote.id);
+    fixture.componentRef.setInput('note', mockNote);
 
     fixture.detectChanges();
 
   });
 
-  it('should create and call loadNoteById onInit', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
-    expect(notesStoreMock.loadNoteById).toHaveBeenCalledWith(mockNote.id);
+    expect(component.noteId()).toEqual(mockNote.id);
+    expect(component.note()).toEqual(mockNote);
   });
 });
