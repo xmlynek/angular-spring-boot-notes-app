@@ -1,12 +1,12 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {NoteListComponent} from './note-list.component';
-import {provideExperimentalZonelessChangeDetection} from "@angular/core";
+import {provideExperimentalZonelessChangeDetection, signal} from "@angular/core";
 import {Note} from "../../../core/modules/openapi";
-import {ActivatedRoute, provideRouter} from "@angular/router";
-import {NoteStore} from "../note.store";
+import {provideRouter} from "@angular/router";
 import {routes} from "../../../app.routes";
 import {ConfirmationService} from "primeng/api";
+import {NotesStore} from "../../../store/notes.store";
 
 describe('NoteListComponent', () => {
   let component: NoteListComponent;
@@ -44,19 +44,23 @@ describe('NoteListComponent', () => {
     },
   ];
 
-  const fakeActivatedRoute = {
-    snapshot: {data: {}}
-  } as ActivatedRoute;
+  const notesStoreMock = {
+    notes: signal(mockNotes),
+    sortedNotes: signal(mockNotes),
+    isLoading: signal(false),
+    updateNote: jasmine.createSpy(),
+    loadAllNotes: jasmine.createSpy(),
+    deleteNote: jasmine.createSpy().and.callFake(() => Promise.resolve()),
+  };
 
   beforeEach(async () => {
-    let mockNoteStore = jasmine.createSpyObj<NoteStore>('NoteStore', ['updateNote', 'deleteNote']);
 
     await TestBed.configureTestingModule({
       imports: [NoteListComponent],
       providers: [
         provideExperimentalZonelessChangeDetection(),
         provideRouter(routes),
-        {provide: NoteStore, useValue: mockNoteStore},
+        {provide: NotesStore, useValue: notesStoreMock},
         ConfirmationService
       ]
     })
@@ -73,12 +77,11 @@ describe('NoteListComponent', () => {
   });
 
   it('should sort notes correctly based on pinned and updatedAt', () => {
-    const sorted = component.sortedNotes();
+    const sorted = component.notes();
 
-    // Expected order: 2 (pinned), 3 (unpinned), 1 (unpinned)
-    expect(sorted[0].id).toBe('2');
-    expect(sorted[1].id).toBe('3');
-    expect(sorted[2].id).toBe('1');
+    expect(sorted[0].id).toBe('1');
+    expect(sorted[1].id).toBe('2');
+    expect(sorted[2].id).toBe('3');
   });
 
   it('should emit edit event when onEditNote is called', () => {

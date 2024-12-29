@@ -1,23 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NotesComponent } from './notes.component';
-import {provideExperimentalZonelessChangeDetection} from "@angular/core";
-import {provideHttpClientTesting} from "@angular/common/http/testing";
-import {provideRouter} from "@angular/router";
-import {routes} from "../../app.routes";
-import {NoteStore} from "../../components/notes/note.store";
+import {provideExperimentalZonelessChangeDetection, signal} from "@angular/core";
 import {Note} from "../../core/modules/openapi";
-import {createSignal} from "@angular/core/primitives/signals";
 import {By} from "@angular/platform-browser";
-import {NoteFormComponent} from "../../components/notes/note-form/note-form.component";
-import {ModalComponent} from "../../shared/modal/modal.component";
-import {provideHttpClient} from "@angular/common/http";
-import {NoteListComponent} from "../../components/notes/note-list/note-list.component";
+import {NotesStore} from "../../store/notes.store";
+import {NoteFormModel} from "../../components/notes/note-form/note-form.model";
+import {routes} from "../../app.routes";
+import {provideRouter} from "@angular/router";
+import {ConfirmationService} from "primeng/api";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('NotesComponent', () => {
   let component: NotesComponent;
   let fixture: ComponentFixture<NotesComponent>;
-  let mockNoteStore: jasmine.SpyObj<NoteStore>;
 
   const mockNotes: Note[] = [
     {
@@ -42,18 +38,24 @@ describe('NotesComponent', () => {
     },
   ];
 
-  beforeEach(async () => {
-    mockNoteStore = jasmine.createSpyObj<NoteStore>('NoteStore', ['updateNote', 'reloadNotes', 'createNote'], {
-      notes: createSignal(mockNotes),
-    });
+  const notesStoreMock = {
+    notes: signal(mockNotes),
+    sortedNotes: signal(mockNotes),
+    isLoading: signal(false),
+    error: signal<string | null>(null),
+    updateNote: jasmine.createSpy(),
+    loadAllNotes: jasmine.createSpy(),
+    createNote: jasmine.createSpy(),
+  };
 
+  beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NotesComponent],
+      imports: [NotesComponent, BrowserAnimationsModule],
       providers: [
         provideExperimentalZonelessChangeDetection(),
-        provideHttpClientTesting(),
-        provideRouter([]),
-        {provide: NoteStore, useValue: mockNoteStore},
+        provideRouter(routes),
+        ConfirmationService,
+        {provide: NotesStore, useValue: notesStoreMock},
       ]
     })
     .compileComponents();
@@ -65,7 +67,7 @@ describe('NotesComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-    expect(mockNoteStore.reloadNotes).toHaveBeenCalled();
+    expect(notesStoreMock.loadAllNotes).toHaveBeenCalled();
   });
 
   it('should display the "Create Note" button', () => {
@@ -73,4 +75,67 @@ describe('NotesComponent', () => {
     expect(createButton).toBeTruthy();
     expect(createButton.nativeElement.textContent).toContain('Create Note');
   });
+
+  it('should show the list of notes', () => {
+    const noteList = fixture.debugElement.queryAll(By.css('app-note-list'));
+    expect(noteList).toBeTruthy();
+  });
+
+  it('should open the dialog for creating a new note', () => {
+    const createButton = fixture.debugElement.query(By.css('.actions button'));
+    createButton.nativeElement.click();
+    fixture.detectChanges();
+
+    expect(component.isDialogShown()).toBeTrue();
+    expect(component.selectedNoteToEdit()).toBeNull();
+  });
+
+  it('should open the dialog for editing a note', () => {
+    const editNote = mockNotes[0];
+    component.openEditDialog(editNote);
+
+    expect(component.isDialogShown()).toBeTrue();
+    expect(component.selectedNoteToEdit()).toEqual(editNote);
+  });
+
+  it('should call createNote when saving a new note', async () => {
+    const newNote: NoteFormModel = {
+      name: 'New Note',
+      content: 'New Note Content',
+      tags: ['new'],
+    };
+
+    component.createNewNote();
+    await component.saveNote(newNote);
+
+    expect(notesStoreMock.createNote).toHaveBeenCalledWith(newNote);
+    expect(component.isDialogShown()).toBeFalse();
+  });
+
+  it('should call updateNote when saving an existing note', async () => {
+    const editNote = mockNotes[0];
+    const updatedNote: NoteFormModel = {
+      name: 'Updated Note',
+      content: 'Updated Content',
+      tags: ['updated'],
+    };
+
+    component.openEditDialog(editNote);
+    await component.saveNote(updatedNote);
+
+    expect(notesStoreMock.updateNote).toHaveBeenCalledWith(editNote.id, {
+      ...editNote,
+      ...updatedNote,
+    });
+    expect(component.isDialogShown()).toBeFalse();
+  });
+
+  it('should display the loading spinner when isLoading is true', () => {
+    notesStoreMock.isLoading.set(true);
+    fixture.detectChanges();
+
+    const spinner = fixture.debugElement.query(By.css('p-progressspinner'));
+    expect(spinner).toBeTruthy();
+  });
+
 });

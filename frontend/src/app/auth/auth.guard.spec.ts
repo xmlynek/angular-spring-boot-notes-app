@@ -2,19 +2,28 @@ import { TestBed } from '@angular/core/testing';
 import {ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot} from '@angular/router';
 
 import { authGuard } from './auth.guard';
-import {KeycloakService} from "keycloak-angular";
 import {provideExperimentalZonelessChangeDetection} from "@angular/core";
+import Keycloak from "keycloak-js";
 
 describe('authGuard', () => {
-  let mockKeycloakService: jasmine.SpyObj<KeycloakService>;
+  let mockKeycloak: jasmine.SpyObj<Keycloak>;
   const executeGuard: CanActivateFn = (...guardParameters) =>
       TestBed.runInInjectionContext(() => authGuard(...guardParameters));
 
   beforeEach(() => {
-    mockKeycloakService = jasmine.createSpyObj<KeycloakService>(['isLoggedIn', 'login']);
+    mockKeycloak = jasmine.createSpyObj('Keycloak', [
+      'authenticated',
+      'login',
+      'logout',
+      'accountManagement',
+      'init'
+    ], {
+      authenticated: true,
+    });
+
     TestBed.configureTestingModule({
       providers: [
-        { provide: KeycloakService, useValue: mockKeycloakService },
+        { provide: Keycloak, useValue: mockKeycloak },
         provideExperimentalZonelessChangeDetection()
       ]
     });
@@ -25,27 +34,44 @@ describe('authGuard', () => {
   });
 
   it('should return true if user is logged in', () => {
-    mockKeycloakService.isLoggedIn.and.returnValue(true);
+    mockKeycloak.init.and.returnValue(Promise.resolve(true));
 
     const route = {} as ActivatedRouteSnapshot;
     const state = { url: '/notes' } as RouterStateSnapshot;
     const result = executeGuard(route, state);
 
     expect(result).toBeTrue();
-    expect(mockKeycloakService.isLoggedIn).toHaveBeenCalled();
-    expect(mockKeycloakService.login).not.toHaveBeenCalled();
+    expect(mockKeycloak.login).not.toHaveBeenCalled();
   });
 
   it('should call login and return false if user is not logged in', () => {
-    mockKeycloakService.isLoggedIn.and.returnValue(false);
+    mockKeycloak = jasmine.createSpyObj('Keycloak', [
+      'authenticated',
+      'login',
+      'logout',
+      'accountManagement',
+      'init'
+    ], {
+      authenticated: false,
+    });
 
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: Keycloak, useValue: mockKeycloak },
+        provideExperimentalZonelessChangeDetection()
+      ]
+    });
+
+    const executeGuard: CanActivateFn = (...guardParameters) =>
+      TestBed.runInInjectionContext(() => authGuard(...guardParameters));
+
+    mockKeycloak.authenticated = false;
     const route = {} as ActivatedRouteSnapshot;
     const state = { url: '/notes' } as RouterStateSnapshot;
     const result = executeGuard(route, state);
 
     expect(result).toBeFalse();
-    expect(mockKeycloakService.isLoggedIn).toHaveBeenCalled();
-    expect(mockKeycloakService.login).toHaveBeenCalledWith({ redirectUri: window.location.origin + state.url });
+    expect(mockKeycloak.login).toHaveBeenCalledWith({ redirectUri: window.location.origin + state.url });
   });
 
 });

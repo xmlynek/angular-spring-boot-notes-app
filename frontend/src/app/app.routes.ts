@@ -1,8 +1,6 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 import {HomeComponent} from "./pages/home/home.component";
 import {AboutComponent} from "./pages/about/about.component";
-import {NotesComponent} from "./pages/notes/notes.component";
-import {NotePageComponent} from "./pages/note/note.component";
 import {authGuard} from "./auth/auth.guard";
 
 export const routes: Routes = [
@@ -13,22 +11,22 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomeComponent
+    component: HomeComponent,
+    title: 'Home'
   },
   {
     path: 'about',
-    component: AboutComponent
+    component: AboutComponent,
+    title: 'About'
   },
   {
     path: 'notes',
     canActivate: [authGuard],
-    children: [
-      { path: '', component: NotesComponent },
-      { path: ':noteId', component: NotePageComponent },
-    ],
+    title: 'Notes',
+    loadChildren: () => import('./components/notes/notes.routes').then(m => m.notesRoutes)
   },
   {
     path: '**',
-    redirectTo: 'notes'
+    redirectTo: 'home'
   }
 ];

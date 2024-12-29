@@ -1,18 +1,17 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { NotePageComponent } from './note.component';
-import {provideExperimentalZonelessChangeDetection} from "@angular/core";
+import {NotePageComponent} from './note.component';
+import {provideExperimentalZonelessChangeDetection, signal} from "@angular/core";
 import {provideHttpClientTesting} from "@angular/common/http/testing";
 import {provideRouter} from "@angular/router";
 import {routes} from "../../app.routes";
-import {Note, NotesService} from "../../core/modules/openapi";
-import {of} from "rxjs";
-import {HttpResponse} from "@angular/common/http";
+import {Note} from "../../core/modules/openapi";
+import {NotesStore} from "../../store/notes.store";
+import {ConfirmationService} from "primeng/api";
 
 describe('NoteComponent', () => {
   let component: NotePageComponent;
   let fixture: ComponentFixture<NotePageComponent>;
-  let mockNotesService: jasmine.SpyObj<NotesService>;
   let mockNote: Note = {
     id: '1',
     name: 'Old Note Title',
@@ -24,16 +23,23 @@ describe('NoteComponent', () => {
     createdAt: new Date().toISOString(),
   };
 
-  beforeEach(async () => {
-    mockNotesService = jasmine.createSpyObj<NotesService>('NotesService', ['getNoteById']);
+  const notesStoreMock = {
+    notes: signal(new Array<Note>()),
+    isLoading: signal(false),
+    error: signal(null),
+    selectedNote: signal(mockNote),
+    loadNoteById: jasmine.createSpy(),
+  };
 
+  beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NotePageComponent],
       providers: [
         provideExperimentalZonelessChangeDetection(),
         provideHttpClientTesting(),
+        ConfirmationService,
         provideRouter(routes),
-        {provide: NotesService, useValue: mockNotesService}
+        {provide: NotesStore, useValue: notesStoreMock}
       ]
     })
     .compileComponents();
@@ -41,6 +47,7 @@ describe('NoteComponent', () => {
     fixture = TestBed.createComponent(NotePageComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('noteId', mockNote.id);
+    fixture.componentRef.setInput('note', mockNote);
 
     fixture.detectChanges();
 
@@ -48,24 +55,7 @@ describe('NoteComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(component.noteId()).toEqual(mockNote.id);
+    expect(component.note()).toEqual(mockNote);
   });
-
-  it('should load note by ID using rxResource', async () => {
-    const mockHttpEvent: HttpResponse<Note> = new HttpResponse({
-      body: mockNote,
-    });
-
-    mockNotesService.getNoteById.and.returnValue(of(mockHttpEvent));
-
-    expect(mockNotesService.getNoteById).toHaveBeenCalledWith(mockNote.id);
-  });
-
-  it('should reload note resource on handleUpdate', () => {
-    spyOn(component.noteResourceRef, 'reload');
-
-    component.handleUpdate();
-
-    expect(component.noteResourceRef.reload).toHaveBeenCalled();
-  });
-
 });

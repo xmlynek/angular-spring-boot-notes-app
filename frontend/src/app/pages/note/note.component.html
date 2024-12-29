@@ -1,8 +1,7 @@
-@if (noteById()) {
+<app-loading-content-wrapper [isLoading]="isLoading()" [error]="error()"
+                             [hasData]="note() !== null"
+                             errorFallbackText="Note {{noteId()}} not found.">
   <div class="note-details">
-    <app-note-details [note]="noteById()!" (updated)="handleUpdate($event)"/>
+    <app-note-details [note]="note()!"/>
   </div>
-} @else {
-  <p class="fallback-text">Note not found.</p>
-}
-
+</app-loading-content-wrapper>

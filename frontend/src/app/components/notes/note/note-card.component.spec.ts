@@ -1,16 +1,15 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {NoteCardComponent} from './note-card.component';
-import {provideExperimentalZonelessChangeDetection} from "@angular/core";
-import {NoteStore} from "../note.store";
+import {provideExperimentalZonelessChangeDetection, signal} from "@angular/core";
 import {Router} from "@angular/router";
 import {Note} from "../../../core/modules/openapi";
 import {ConfirmationService} from "primeng/api";
+import {NotesStore} from "../../../store/notes.store";
 
 describe('NoteComponent', () => {
   let component: NoteCardComponent;
   let fixture: ComponentFixture<NoteCardComponent>;
-  let mockNoteStore: jasmine.SpyObj<NoteStore>;
   let mockRouter: jasmine.SpyObj<Router>;
   let mockNote: Note = {
     id: '1',
@@ -23,15 +22,21 @@ describe('NoteComponent', () => {
     createdAt: new Date().toISOString(),
   };
 
+  const notesStoreMock = {
+    notes: signal(new Array<Note>()),
+    isLoading: signal(false),
+    updateNote: jasmine.createSpy(),
+    deleteNote: jasmine.createSpy(),
+  };
+
   beforeEach(async () => {
-    mockNoteStore = jasmine.createSpyObj<NoteStore>('NoteStore', ['updateNote', 'deleteNote']);
     mockRouter = jasmine.createSpyObj<Router>('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       imports: [NoteCardComponent],
       providers: [
         provideExperimentalZonelessChangeDetection(),
-        {provide: NoteStore, useValue: mockNoteStore},
+        {provide: NotesStore, useValue: notesStoreMock},
         {provide: Router, useValue: mockRouter},
         ConfirmationService
       ]
@@ -54,7 +59,7 @@ describe('NoteComponent', () => {
     component.togglePinned(mockEvent);
 
     expect(mockEvent.stopPropagation).toHaveBeenCalled();
-    expect(mockNoteStore.updateNote).toHaveBeenCalledWith(mockNote.id, {
+    expect(notesStoreMock.updateNote).toHaveBeenCalledWith(mockNote.id, {
       ...mockNote,
       isPinned: !mockNote.isPinned
     });
@@ -62,7 +67,7 @@ describe('NoteComponent', () => {
 
   it('should call deleteNote when delete button is clicked', () => {
     component.handleDelete();
-    expect(mockNoteStore.deleteNote).toHaveBeenCalledWith(mockNote.id);
+    expect(notesStoreMock.deleteNote).toHaveBeenCalledWith(mockNote.id);
   });
 
   it('should call updateNote when pinned checkbox is toggled', () => {

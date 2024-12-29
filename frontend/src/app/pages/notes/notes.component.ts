@@ -6,10 +6,13 @@ import {FormsModule} from "@angular/forms";
 import {NoteFormComponent} from "../../components/notes/note-form/note-form.component";
 import {ModalComponent} from "../../shared/modal/modal.component";
 import {NoteFormModel} from "../../components/notes/note-form/note-form.model";
-import {ApiModule, Note} from "../../core/modules/openapi";
-import {NoteStore} from "../../components/notes/note.store";
+import {Note} from "../../core/modules/openapi";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {TextareaModule} from "primeng/textarea";
+import {NotesStore} from "../../store/notes.store";
+import {
+  LoadingContentWrapperComponent
+} from "../../shared/loading-content-wrapper/loading-content-wrapper.component";
 
 @Component({
   selector: 'app-notes',
@@ -21,8 +24,8 @@ import {TextareaModule} from "primeng/textarea";
     FormsModule,
     InputTextModule,
     TextareaModule,
-    ApiModule,
     ProgressSpinnerModule,
+    LoadingContentWrapperComponent,
   ],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.scss',
@@ -30,33 +33,36 @@ import {TextareaModule} from "primeng/textarea";
 })
 export class NotesComponent {
 
-  protected noteStore = inject(NoteStore);
-  notes = this.noteStore.notes;
-  showDialog = signal<boolean>(false);
+  private readonly notesStore = inject(NotesStore)
+  notes = this.notesStore.sortedNotes;
+  isLoading = this.notesStore.isLoading;
+  error = this.notesStore.error;
+
+  isDialogShown = signal<boolean>(false);
   selectedNoteToEdit = signal<Note | null>(null);
 
   constructor() {
-    this.noteStore.reloadNotes();
+    this.notesStore.loadAllNotes();
   }
 
   createNewNote() {
     this.selectedNoteToEdit.set(null);
-    this.showDialog.set(true);
+    this.isDialogShown.set(true);
   }
 
   openEditDialog(note: Note) {
     this.selectedNoteToEdit.set(note);
-    this.showDialog.set(true);
+    this.isDialogShown.set(true);
   }
 
-  saveNote(noteRequest: NoteFormModel) {
+  async saveNote(noteRequest: NoteFormModel) {
     const editingNote = this.selectedNoteToEdit();
     if (editingNote) {
-      this.noteStore.updateNote(editingNote.id, { ...editingNote, ...noteRequest });
+      await this.notesStore.updateNote(editingNote.id, { ...editingNote, ...noteRequest });
     } else {
-      this.noteStore.createNote(noteRequest);
+      await this.notesStore.createNote(noteRequest);
     }
     this.selectedNoteToEdit.set(null);
-    this.showDialog.set(false);
+    this.isDialogShown.set(false);
   }
 }

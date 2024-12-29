@@ -1,0 +1,9 @@
+@if (isLoading()) {
+  <div class="centered-content">
+    <p-progressSpinner/>
+  </div>
+} @else if (!error() && hasData()) {
+  <ng-content/>
+} @else {
+  <p class="centered-content fallback-text">{{ errorFallbackText() }}</p>
+}
