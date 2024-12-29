@@ -32,7 +32,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Grant execute permissions for mvnw
-        run: chmod +x ./mvnw
+        run: chmod +x ./notes-app-service/mvnw
 
       - name: Build and test backend
         run: |
