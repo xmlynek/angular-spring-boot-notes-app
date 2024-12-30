@@ -1,5 +1,5 @@
 export const environment = {
-  keycloakUrl: '',
+  keycloakUrl: 'http://localhost:8090',
   keycloakRealm: 'notes',
   keycloakClientId: 'notes-client',
   production: true
